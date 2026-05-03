@@ -157,7 +157,7 @@
         <div class="product-img-wrap">
           <img src="images/Bracelet .png" alt="Handcrafted Bracelet" class="product-img" loading="lazy" />
           <div class="product-hover-overlay">
-            <button class="overlay-btn" onclick="addToCart('Handcrafted Bracelet', 599)">ADD TO CART</button>
+            <button class="overlay-btn" onclick="showSizeModal('Handcrafted Bracelet', 599)">ADD TO CART</button>
           </div>
         </div>
         <div class="product-info">
@@ -166,7 +166,7 @@
             preference.</p>
           <div class="product-footer">
             <span class="product-price">₹69</span>
-            <button class="shop-btn" onclick="addToCart('Handcrafted Bracelet', 599)" id="btn-bracelet">SHOP
+            <button class="shop-btn" onclick="showSizeModal('Handcrafted Bracelet', 599)" id="btn-bracelet">SHOP
               NOW</button>
           </div>
         </div>
@@ -178,7 +178,7 @@
           <img src="images/Bracelet with Chain Combo.png" alt="Bracelet with Chain Combo" class="product-img"
             loading="lazy" />
           <div class="product-hover-overlay">
-            <button class="overlay-btn" onclick="addToCart('Bracelet with Chain Combo', 899)">ADD TO CART</button>
+            <button class="overlay-btn" onclick="showSizeModal('Bracelet with Chain Combo', 899)">ADD TO CART</button>
           </div>
         </div>
         <div class="product-info">
@@ -187,7 +187,7 @@
             set.</p>
           <div class="product-footer">
             <span class="product-price">₹119</span>
-            <button class="shop-btn" onclick="addToCart('Bracelet with Chain Combo', 899)" id="btn-combo">SHOP
+            <button class="shop-btn" onclick="showSizeModal('Bracelet with Chain Combo', 899)" id="btn-combo">SHOP
               NOW</button>
           </div>
         </div>
@@ -199,7 +199,7 @@
           <img src="images/Clear with Crystal Customized bracelet combo.png"
             alt="Clear with Crystal Customized Bracelet Combo" class="product-img" loading="lazy" />
           <div class="product-hover-overlay">
-            <button class="overlay-btn" onclick="addToCart('Crystal Customized Combo', 1099)">ADD TO CART</button>
+            <button class="overlay-btn" onclick="showSizeModal('Crystal Customized Combo', 1099)">ADD TO CART</button>
           </div>
         </div>
         <div class="product-info">
@@ -208,7 +208,7 @@
             set.</p>
           <div class="product-footer">
             <span class="product-price">₹89</span>
-            <button class="shop-btn" onclick="addToCart('Crystal Customized Combo', 1099)" id="btn-crystal-combo">SHOP
+            <button class="shop-btn" onclick="showSizeModal('Crystal Customized Combo', 1099)" id="btn-crystal-combo">SHOP
               NOW</button>
           </div>
         </div>
@@ -219,7 +219,7 @@
         <div class="product-img-wrap">
           <img src="images/Customized Chains.png" alt="Customized Chains" class="product-img" loading="lazy" />
           <div class="product-hover-overlay">
-            <button class="overlay-btn" onclick="addToCart('Customized Chains', 799)">ADD TO CART</button>
+            <button class="overlay-btn" onclick="showSizeModal('Customized Chains', 799)">ADD TO CART</button>
           </div>
         </div>
         <div class="product-info">
@@ -228,7 +228,7 @@
             for you.</p>
           <div class="product-footer">
             <span class="product-price">₹99</span>
-            <button class="shop-btn" onclick="addToCart('Customized Chains', 799)" id="btn-chains">SHOP NOW</button>
+            <button class="shop-btn" onclick="showSizeModal('Customized Chains', 799)" id="btn-chains">SHOP NOW</button>
           </div>
         </div>
       </div>
@@ -238,7 +238,7 @@
         <div class="product-img-wrap">
           <img src="images/Evil Eye Bracelet.png" alt="Evil Eye Bracelet" class="product-img" loading="lazy" />
           <div class="product-hover-overlay">
-            <button class="overlay-btn" onclick="addToCart('Evil Eye Bracelet', 699)">ADD TO CART</button>
+            <button class="overlay-btn" onclick="showSizeModal('Evil Eye Bracelet', 699)">ADD TO CART</button>
           </div>
         </div>
         <div class="product-info">
@@ -247,7 +247,7 @@
             hand-picked beads.</p>
           <div class="product-footer">
             <span class="product-price">₹89</span>
-            <button class="shop-btn" onclick="addToCart('Evil Eye Bracelet', 699)" id="btn-evileye">SHOP NOW</button>
+            <button class="shop-btn" onclick="showSizeModal('Evil Eye Bracelet', 699)" id="btn-evileye">SHOP NOW</button>
           </div>
         </div>
       </div>
@@ -258,7 +258,7 @@
           <img src="images/Triple Crystal Bracelets.png" alt="Triple Crystal Bracelets" class="product-img"
             loading="lazy" />
           <div class="product-hover-overlay">
-            <button class="overlay-btn" onclick="addToCart('Triple Crystal Bracelets', 1299)">ADD TO CART</button>
+            <button class="overlay-btn" onclick="showSizeModal('Triple Crystal Bracelets', 1299)">ADD TO CART</button>
           </div>
         </div>
         <div class="product-info">
@@ -267,7 +267,7 @@
             — pure elegance.</p>
           <div class="product-footer">
             <span class="product-price">₹149</span>
-            <button class="shop-btn" onclick="addToCart('Triple Crystal Bracelets', 1299)" id="btn-triple">SHOP
+            <button class="shop-btn" onclick="showSizeModal('Triple Crystal Bracelets', 1299)" id="btn-triple">SHOP
               NOW</button>
           </div>
         </div>
@@ -453,6 +453,32 @@
 
   <!-- Cart Toast -->
   <div class="cart-toast" id="cart-toast"></div>
+
+  <!-- Size Selection Modal -->
+  <div class="modal" id="sizeModal">
+    <div class="modal-content">
+      <button class="modal-close" onclick="closeSizeModal()">✕</button>
+      <div class="modal-header">
+        <p class="modal-title">Select Size (CM)</p>
+      </div>
+      <div class="size-selector">
+        <button class="size-nav-btn size-nav-prev" onclick="scrollSizes('prev')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <div class="size-scroll-container">
+          <div class="size-options" id="sizeOptions"></div>
+        </div>
+        <button class="size-nav-btn size-nav-next" onclick="scrollSizes('next')">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+      <button class="btn-primary full-width" onclick="confirmSize()">ADD TO CART</button>
+    </div>
+  </div>
 
   <script src="script.js"></script>
 </body>

@@ -26,11 +26,72 @@ function closeMobile() {
   document.body.style.overflow = '';
 }
 
-// ---------- Cart ----------
+// ---------- Cart & Size Selection ----------
 let cartCount = 0;
 const cartBadge = document.getElementById('cart-count');
 const cartToast = document.getElementById('cart-toast');
+const sizeModal = document.getElementById('sizeModal');
+const sizeOptions = document.getElementById('sizeOptions');
 let toastTimer;
+let pendingProduct = null;
+let selectedSize = null;
+
+// Initialize size buttons on page load
+function initializeSizeOptions() {
+  const sizes = [];
+  for (let i = 16; i <= 24; i++) {
+    sizes.push(i);
+  }
+  
+  sizeOptions.innerHTML = sizes.map(size => 
+    `<button class="size-btn" data-size="${size}" onclick="selectSize(${size})">${size}</button>`
+  ).join('');
+}
+
+function showSizeModal(name, price) {
+  pendingProduct = { name, price };
+  selectedSize = null;
+  sizeModal.classList.add('show');
+  document.body.style.overflow = 'hidden';
+  
+  // Clear previous selection
+  document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
+}
+
+function closeSizeModal() {
+  sizeModal.classList.remove('show');
+  document.body.style.overflow = '';
+  pendingProduct = null;
+  selectedSize = null;
+  document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
+}
+
+function selectSize(size) {
+  selectedSize = size;
+  document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
+  document.querySelector(`[data-size="${size}"]`).classList.add('selected');
+}
+
+function scrollSizes(direction) {
+  const container = document.querySelector('.size-scroll-container');
+  const scrollAmount = 100; // Adjust based on button size
+  
+  if (direction === 'prev') {
+    container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+  } else {
+    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+  }
+}
+
+function confirmSize() {
+  if (!selectedSize || !pendingProduct) {
+    alert('Please select a size');
+    return;
+  }
+  
+  addToCart(`${pendingProduct.name} (${selectedSize} CM)`, pendingProduct.price);
+  closeSizeModal();
+}
 
 function addToCart(name, price) {
   cartCount++;
@@ -46,6 +107,11 @@ function addToCart(name, price) {
   cartToast.classList.add('show');
   toastTimer = setTimeout(() => cartToast.classList.remove('show'), 3200);
 }
+
+// Close modal when clicking outside
+sizeModal.addEventListener('click', (e) => {
+  if (e.target === sizeModal) closeSizeModal();
+});
 
 // ---------- Contact Form ----------
 function handleSubmit(e) {
@@ -75,6 +141,9 @@ function handleSubmit(e) {
 
 // ---------- Scroll-reveal animations ----------
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize size options
+  initializeSizeOptions();
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
