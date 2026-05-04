@@ -26,92 +26,113 @@ function closeMobile() {
   document.body.style.overflow = '';
 }
 
-// ---------- Cart & Size Selection ----------
-let cartCount = 0;
+// ---------- Global Cart System ----------
+let cart = JSON.parse(localStorage.getItem('cartItems') || '[]');
 const cartBadge = document.getElementById('cart-count');
-const cartToast = document.getElementById('cart-toast');
-const sizeModal = document.getElementById('sizeModal');
-const sizeOptions = document.getElementById('sizeOptions');
-let toastTimer;
-let pendingProduct = null;
-let selectedSize = null;
 
-// Initialize size buttons on page load
-function initializeSizeOptions() {
-  const sizes = [];
-  for (let i = 16; i <= 24; i++) {
-    sizes.push(i);
-  }
-  
-  sizeOptions.innerHTML = sizes.map(size => 
-    `<button class="size-btn" data-size="${size}" onclick="selectSize(${size})">${size}</button>`
-  ).join('');
-}
+// Inject Cart HTML into every page
+const cartHTML = `
+  <div class="cart-overlay-bg" id="cart-overlay"></div>
+  <div class="cart-sidebar" id="cart-sidebar">
+    <div class="cart-sidebar-header">
+      <h2>Your Cart</h2>
+      <button class="cart-close-btn" id="cart-close">✕</button>
+    </div>
+    <div class="cart-sidebar-items" id="cart-items-container">
+      <!-- Items render here -->
+    </div>
+    <div class="cart-sidebar-footer">
+      <div class="cart-total-row">
+        <span class="cart-total-label">Total:</span>
+        <span class="cart-total-value" id="cart-total-price">₹0</span>
+      </div>
+      <button class="btn-primary full-width" onclick="alert('Checkout coming soon!')">PROCEED TO CHECKOUT</button>
+    </div>
+  </div>
+`;
+document.body.insertAdjacentHTML('beforeend', cartHTML);
 
-function showSizeModal(name, price) {
-  pendingProduct = { name, price };
-  selectedSize = null;
-  sizeModal.classList.add('show');
+const cartSidebar = document.getElementById('cart-sidebar');
+const cartOverlay = document.getElementById('cart-overlay');
+const cartItemsContainer = document.getElementById('cart-items-container');
+const cartTotalPrice = document.getElementById('cart-total-price');
+
+// Open / Close Cart
+function openCart() {
+  renderCart();
+  cartSidebar.classList.add('open');
+  cartOverlay.classList.add('show');
   document.body.style.overflow = 'hidden';
-  
-  // Clear previous selection
-  document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
 }
-
-function closeSizeModal() {
-  sizeModal.classList.remove('show');
+function closeCart() {
+  cartSidebar.classList.remove('open');
+  cartOverlay.classList.remove('show');
   document.body.style.overflow = '';
-  pendingProduct = null;
-  selectedSize = null;
-  document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
 }
 
-function selectSize(size) {
-  selectedSize = size;
-  document.querySelectorAll('.size-btn').forEach(btn => btn.classList.remove('selected'));
-  document.querySelector(`[data-size="${size}"]`).classList.add('selected');
+document.querySelectorAll('.cart-btn').forEach(btn => btn.addEventListener('click', openCart));
+document.getElementById('cart-close').addEventListener('click', closeCart);
+cartOverlay.addEventListener('click', closeCart);
+
+// Update Badge
+function updateCartBadge() {
+  const count = cart.length;
+  if(cartBadge) {
+    cartBadge.textContent = count;
+    cartBadge.style.transform = 'scale(1.6)';
+    setTimeout(() => { cartBadge.style.transform = 'scale(1)'; }, 220);
+  }
 }
 
-function scrollSizes(direction) {
-  const container = document.querySelector('.size-scroll-container');
-  const scrollAmount = 100; // Adjust based on button size
-  
-  if (direction === 'prev') {
-    container.scrollBy({ left: -scrollAmount, behavior: 'smooth' });
+// Render Cart Items
+function renderCart() {
+  cartItemsContainer.innerHTML = '';
+  let total = 0;
+
+  if (cart.length === 0) {
+    cartItemsContainer.innerHTML = '<p class="cart-empty-msg">Your cart is empty.</p>';
   } else {
-    container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    cart.forEach((item, index) => {
+      // price string like "₹69" -> integer
+      const priceNum = parseInt(item.price.replace(/[^0-9]/g, '')) || 0;
+      total += priceNum;
+
+      const div = document.createElement('div');
+      div.className = 'cart-item';
+      div.innerHTML = `
+        <img src="${item.img}" alt="${item.name}" class="cart-item-img"/>
+        <div class="cart-item-info">
+          <p class="cart-item-title">${item.name}</p>
+          <p class="cart-item-meta">Size: ${item.size} <br/>Color: ${item.color || 'Standard'}</p>
+          <p class="cart-item-price">${item.price}</p>
+        </div>
+        <button class="cart-item-remove" onclick="removeFromCart(${index})">✕</button>
+      `;
+      cartItemsContainer.appendChild(div);
+    });
   }
+
+  cartTotalPrice.textContent = '₹' + total.toLocaleString('en-IN');
+  updateCartBadge();
 }
 
-function confirmSize() {
-  if (!selectedSize || !pendingProduct) {
-    alert('Please select a size');
-    return;
-  }
-  
-  addToCart(`${pendingProduct.name} (${selectedSize} CM)`, pendingProduct.price);
-  closeSizeModal();
+// Add to Cart
+window.addToCart = function(item) {
+  cart.push(item);
+  localStorage.setItem('cartItems', JSON.stringify(cart));
+  updateCartBadge();
+  openCart(); // Show cart when item added
 }
 
-function addToCart(name, price) {
-  cartCount++;
-  cartBadge.textContent = cartCount;
-
-  // Pulse animation on badge
-  cartBadge.style.transform = 'scale(1.6)';
-  setTimeout(() => { cartBadge.style.transform = 'scale(1)'; }, 220);
-
-  // Show toast
-  clearTimeout(toastTimer);
-  cartToast.innerHTML = `<strong>${name}</strong> added to cart &nbsp;✦&nbsp; ₹${price.toLocaleString('en-IN')}`;
-  cartToast.classList.add('show');
-  toastTimer = setTimeout(() => cartToast.classList.remove('show'), 3200);
+// Remove from Cart
+window.removeFromCart = function(index) {
+  cart.splice(index, 1);
+  localStorage.setItem('cartItems', JSON.stringify(cart));
+  renderCart();
 }
 
-// Close modal when clicking outside
-sizeModal.addEventListener('click', (e) => {
-  if (e.target === sizeModal) closeSizeModal();
-});
+// Init badge on load
+updateCartBadge();
 
 // ---------- Contact Form ----------
 function handleSubmit(e) {
@@ -141,8 +162,7 @@ function handleSubmit(e) {
 
 // ---------- Scroll-reveal animations ----------
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize size options
-  initializeSizeOptions();
+
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {

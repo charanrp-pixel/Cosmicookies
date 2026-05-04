@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Product – Cosmicookies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .pd-wrap{margin-top:76px;padding:56px;max-width:1200px;margin-left:auto;margin-right:auto;display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:start;}
+    .pd-gallery{position:sticky;top:96px;}
+    .pd-main-img-wrap{border-radius:18px;overflow:hidden;height:480px;box-shadow:var(--shadow-lg);margin-bottom:16px;}
+    .pd-main-img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease;}
+    .pd-main-img:hover{transform:scale(1.04);}
+    .pd-thumbs{display:flex;gap:10px;flex-wrap:wrap;}
+    .pd-thumb{width:72px;height:72px;border-radius:10px;overflow:hidden;cursor:pointer;border:2px solid transparent;transition:all .25s;}
+    .pd-thumb img{width:100%;height:100%;object-fit:cover;}
+    .pd-thumb.active,.pd-thumb:hover{border-color:var(--rose);}
+    .pd-info{}
+    .pd-breadcrumb{font-size:.68rem;color:var(--text-light);letter-spacing:.1em;margin-bottom:16px;}
+    .pd-breadcrumb a{color:var(--text-light);text-decoration:none;}.pd-breadcrumb a:hover{color:var(--rose);}
+    .pd-name{font-family:'Cormorant Garamond',serif;font-size:2.2rem;font-weight:600;color:var(--text-dark);line-height:1.15;margin-bottom:8px;}
+    .pd-stars{display:flex;align-items:center;gap:6px;margin-bottom:14px;}
+    .pd-stars span{color:var(--gold);font-size:1rem;letter-spacing:2px;}
+    .pd-stars em{font-size:.75rem;color:var(--text-light);font-style:normal;}
+    .pd-price-row{display:flex;align-items:baseline;gap:14px;margin-bottom:6px;}
+    .pd-price{font-family:'Cormorant Garamond',serif;font-size:2.4rem;font-weight:600;color:var(--rose);}
+    .pd-price-orig{font-size:1rem;color:var(--text-light);text-decoration:line-through;}
+    .pd-discount{font-size:.8rem;font-weight:700;color:#4caf50;background:#e8f5e9;padding:3px 10px;border-radius:20px;}
+    .pd-tax{font-size:.72rem;color:var(--text-light);margin-bottom:20px;}
+    .pd-desc{font-size:.87rem;line-height:1.9;color:var(--text-mid);margin-bottom:24px;padding-bottom:24px;border-bottom:1px solid rgba(201,146,122,.15);}
+    .pd-section-label{font-size:.66rem;font-weight:700;letter-spacing:.18em;color:var(--text-mid);text-transform:uppercase;margin-bottom:12px;}
+    .pd-sizes{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;}
+    .pd-size-btn{width:58px;height:58px;border-radius:50%;border:2px solid rgba(201,146,122,.3);background:var(--white);color:var(--text-dark);font-size:.88rem;font-weight:600;cursor:pointer;transition:all .25s;font-family:'Montserrat',sans-serif;}
+    .pd-size-btn:hover,.pd-size-btn.sel{background:var(--rose);border-color:var(--rose);color:#fff;box-shadow:0 4px 14px rgba(201,146,122,.4);}
+    .pd-badges-row{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:28px;}
+    .pd-badge-pill{display:flex;align-items:center;gap:6px;background:var(--blush);border-radius:20px;padding:8px 14px;font-size:.7rem;font-weight:600;color:var(--text-dark);}
+    .pd-actions{display:flex;gap:14px;margin-bottom:28px;}
+    .pd-add-btn{flex:1;padding:16px;background:var(--rose);color:#fff;border:none;border-radius:4px;font-size:.78rem;font-weight:700;letter-spacing:.14em;cursor:pointer;font-family:'Montserrat',sans-serif;transition:var(--transition);}
+    .pd-add-btn:hover{background:var(--rose-dark);transform:translateY(-2px);box-shadow:0 8px 24px rgba(165,104,79,.35);}
+    .pd-wish-btn{width:54px;height:54px;border:2px solid rgba(201,146,122,.3);background:var(--white);border-radius:4px;cursor:pointer;font-size:1.3rem;transition:all .25s;display:flex;align-items:center;justify-content:center;}
+    .pd-wish-btn:hover{border-color:var(--rose);background:var(--blush);}
+    /* CUSTOMIZER */
+    .customizer{background:var(--blush);border-radius:18px;padding:32px;margin-top:40px;}
+    .customizer h3{font-family:'Cormorant Garamond',serif;font-size:1.6rem;font-weight:600;color:var(--text-dark);margin-bottom:4px;}
+    .customizer>.sub{font-size:.8rem;color:var(--text-mid);margin-bottom:24px;}
+    .cust-block{margin-bottom:22px;}
+    .cust-label{font-size:.66rem;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--text-mid);margin-bottom:10px;display:block;}
+    .color-swatches{display:flex;gap:10px;flex-wrap:wrap;}
+    .color-swatch{width:36px;height:36px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:all .25s;position:relative;}
+    .color-swatch.sel,.color-swatch:hover{border-color:var(--text-dark);transform:scale(1.15);}
+    .color-swatch.sel::after{content:'✓';position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;color:#fff;}
+    .charm-options{display:flex;gap:10px;flex-wrap:wrap;}
+    .charm-btn{padding:8px 16px;border-radius:20px;border:1.5px solid rgba(201,146,122,.3);background:var(--white);font-size:.72rem;font-weight:600;cursor:pointer;font-family:'Montserrat',sans-serif;transition:all .25s;color:var(--text-mid);}
+    .charm-btn.sel,.charm-btn:hover{background:var(--rose);border-color:var(--rose);color:#fff;}
+    .cust-textarea{width:100%;padding:12px 16px;border:1.5px solid rgba(201,146,122,.22);border-radius:10px;background:var(--white);font-family:'Montserrat',sans-serif;font-size:.84rem;color:var(--text-dark);resize:vertical;min-height:90px;outline:none;transition:border-color .25s;}
+    .cust-textarea:focus{border-color:var(--rose);}
+    .cust-submit{width:100%;padding:16px;background:var(--rose-dark);color:#fff;border:none;border-radius:4px;font-size:.78rem;font-weight:700;letter-spacing:.14em;cursor:pointer;font-family:'Montserrat',sans-serif;margin-top:8px;transition:var(--transition);}
+    .cust-submit:hover{background:var(--rose);transform:translateY(-2px);}
+    .cust-success{display:none;text-align:center;color:var(--rose);font-size:.84rem;margin-top:14px;font-style:italic;}
+    .cust-success.show{display:block;}
+    /* Delivery info */
+    .pd-delivery{background:var(--white);border-radius:12px;padding:18px 20px;margin-top:20px;display:flex;flex-direction:column;gap:12px;}
+    .pd-delivery-row{display:flex;align-items:center;gap:12px;font-size:.78rem;color:var(--text-mid);}
+    .pd-delivery-row svg{color:var(--rose);flex-shrink:0;}
+    /* Responsive */
+    @media(max-width:960px){.pd-wrap{grid-template-columns:1fr;padding:36px 28px;gap:40px;}.pd-gallery{position:static;}}
+    @media(max-width:600px){.pd-wrap{padding:24px 18px;}.pd-main-img-wrap{height:320px;}.pd-name{font-size:1.7rem;}}
+  </style>
+</head>
+<body>
+
+  <header class="navbar" id="navbar">
+    <div class="nav-left">
+      <button class="hamburger" id="hamburger" aria-label="Open menu"><span></span><span></span><span></span></button>
+      <nav class="nav-links left-links">
+        <a href="index.html" class="nav-link">HOME</a>
+        <a href="shop.html" class="nav-link active">SHOP</a>
+        <a href="index.html#about" class="nav-link">ABOUT US</a>
+      </nav>
+    </div>
+    <div class="nav-brand">
+      <div class="brand-star">✦</div>
+      <div class="brand-name">cosmicookies</div>
+      <div class="brand-sub">· BRACELETS ·</div>
+    </div>
+    <div class="nav-right">
+      <nav class="nav-links right-links">
+        <a href="shop.html" class="nav-link">COLLECTIONS</a>
+        <a href="index.html#contact" class="nav-link">CONTACT</a>
+      </nav>
+      <div class="nav-icons">
+        <button class="icon-btn cart-btn" aria-label="Cart" id="cart-btn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+          <span class="cart-badge" id="cart-count">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="mobile-menu" id="mobile-menu">
+    <button class="close-menu" id="close-menu">✕</button>
+    <div class="mobile-brand-name">cosmicookies</div>
+    <nav class="mobile-nav-links">
+      <a href="index.html" class="mobile-nav-link">HOME</a>
+      <a href="shop.html" class="mobile-nav-link">SHOP</a>
+      <a href="index.html#contact" class="mobile-nav-link">CONTACT</a>
+    </nav>
+  </div>
+
+  <div class="pd-wrap">
+    <!-- GALLERY -->
+    <div class="pd-gallery">
+      <div class="pd-main-img-wrap">
+        <img src="" alt="" class="pd-main-img" id="pd-main-img"/>
+      </div>
+      <div class="pd-thumbs" id="pd-thumbs"></div>
+    </div>
+
+    <!-- INFO + CUSTOMIZER -->
+    <div class="pd-info">
+      <p class="pd-breadcrumb"><a href="index.html">Home</a> &rsaquo; <a href="shop.html">Shop</a> &rsaquo; <span id="pd-bread-name">Product</span></p>
+      <h1 class="pd-name" id="pd-name">Loading…</h1>
+      <div class="pd-stars">
+        <span>★★★★★</span>
+        <em id="pd-reviews">4.9 · 38 reviews</em>
+      </div>
+      <div class="pd-price-row">
+        <span class="pd-price" id="pd-price">₹--</span>
+        <span class="pd-price-orig" id="pd-orig">₹--</span>
+        <span class="pd-discount" id="pd-disc">--% OFF</span>
+      </div>
+      <p class="pd-tax">Inclusive of all taxes · Free gift packaging</p>
+      <p class="pd-desc" id="pd-desc"></p>
+
+      <p class="pd-section-label">Select Wrist Size (cm)</p>
+      <div class="pd-sizes" id="pd-sizes"></div>
+
+      <div class="pd-badges-row">
+        <div class="pd-badge-pill">🤝 Handmade</div>
+        <div class="pd-badge-pill">🎁 Gift Ready</div>
+        <div class="pd-badge-pill">✨ 100% Customisable</div>
+        <div class="pd-badge-pill">📍 Chennai</div>
+      </div>
+
+      <div class="pd-actions">
+        <button class="pd-add-btn" id="pd-add-btn">ADD TO CART</button>
+        <button class="pd-wish-btn" id="pd-wish-btn">♡</button>
+      </div>
+
+      <div class="pd-delivery">
+        <div class="pd-delivery-row">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="1" y="3" width="15" height="13" rx="1"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          <span>Free delivery across Chennai · Pan India shipping available</span>
+        </div>
+        <div class="pd-delivery-row">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M22 11.08V12a10 10 0 11-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          <span>Handcrafted to order · Ready in 3–5 days</span>
+        </div>
+        <div class="pd-delivery-row">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Secure ordering · DM on Instagram to confirm</span>
+        </div>
+      </div>
+
+      <!-- CUSTOMIZER -->
+      <div class="customizer" id="customizer">
+        <h3>✨ Customise Your Piece</h3>
+        <p class="sub">Tell us exactly how you want it made — we'll craft it just for you.</p>
+
+        <div class="cust-block">
+          <span class="cust-label">Pick Bead Colour</span>
+          <div class="color-swatches" id="color-swatches">
+            <div class="color-swatch sel" style="background:#f9a8c9" data-color="Pink" title="Pink"></div>
+            <div class="color-swatch" style="background:#a8d8f9" data-color="Sky Blue" title="Sky Blue"></div>
+            <div class="color-swatch" style="background:#b8f9a8" data-color="Mint" title="Mint"></div>
+            <div class="color-swatch" style="background:#f9e4a8" data-color="Butter Yellow" title="Butter Yellow"></div>
+            <div class="color-swatch" style="background:#d4a8f9" data-color="Lavender" title="Lavender"></div>
+            <div class="color-swatch" style="background:#f9c8a8" data-color="Peach" title="Peach"></div>
+            <div class="color-swatch" style="background:#ffffff;border:2px solid #ddd" data-color="White" title="White"></div>
+            <div class="color-swatch" style="background:#3a2a25" data-color="Black" title="Black"></div>
+          </div>
+        </div>
+
+        <div class="cust-block">
+          <span class="cust-label">Choose a Charm</span>
+          <div class="charm-options">
+            <button class="charm-btn sel" data-charm="Heart">💗 Heart</button>
+            <button class="charm-btn" data-charm="Star">⭐ Star</button>
+            <button class="charm-btn" data-charm="Moon">🌙 Moon</button>
+            <button class="charm-btn" data-charm="Butterfly">🦋 Butterfly</button>
+            <button class="charm-btn" data-charm="Daisy">🌼 Daisy</button>
+            <button class="charm-btn" data-charm="Evil Eye">🧿 Evil Eye</button>
+            <button class="charm-btn" data-charm="None">✕ No Charm</button>
+          </div>
+        </div>
+
+        <div class="cust-block">
+          <span class="cust-label">Special Message / Instructions</span>
+          <textarea class="cust-textarea" id="cust-note" placeholder="e.g. Make it for a birthday gift, add initials 'S', bracelet for 15cm wrist, pastel colours preferred…"></textarea>
+        </div>
+
+        <button class="cust-submit" id="cust-submit">SEND CUSTOMISATION REQUEST ✨</button>
+        <p class="cust-success" id="cust-success">🌸 Request sent! We'll DM you to confirm your design soon.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <span class="footer-logo">cosmicookies</span>
+        <p>Handcrafted with love.<br/>Every bracelet tells your story.</p>
+      </div>
+      <div class="footer-links-group">
+        <h4>Quick Links</h4>
+        <a href="index.html">Home</a>
+        <a href="shop.html">Collections</a>
+        <a href="index.html#about">About Us</a>
+        <a href="index.html#contact">Contact</a>
+      </div>
+      <div class="footer-links-group">
+        <h4>Follow Us</h4>
+        <a href="#">Instagram</a>
+        <a href="#">Facebook</a>
+        <a href="#">Pinterest</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      THANK YOU FOR SUPPORTING A SMALL BUSINESS
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    const products = {
+      'bracelet':      { name:'Handcrafted Bracelet',            price:'₹69',  orig:'₹120', disc:'42% OFF', reviews:'4.9 · 38 reviews', imgs:['images/Bracelet .png'], desc:'A beautifully crafted signature bracelet, fully customisable to your style. Each bead is hand-threaded with care, making every piece uniquely yours. Perfect as an everyday accessory or a thoughtful gift for someone special. Choose your colours, pick a charm, and we\'ll create your dream bracelet.' },
+      'combo':         { name:'Bracelet with Chain Combo',       price:'₹119', orig:'₹200', disc:'40% OFF', reviews:'4.8 · 52 reviews', imgs:['images/Bracelet with Chain Combo.png','images/Bracelet .png'], desc:'A stunning pairing of a handcrafted beaded bracelet and a delicate gold-toned chain. Stack them together or wear separately — both are fully customisable. A perfect duo gift set for best friends or as a couple\'s matching set.' },
+      'crystal-combo': { name:'Crystal Customized Combo',       price:'₹89',  orig:'₹160', disc:'44% OFF', reviews:'5.0 · 21 reviews', imgs:['images/Clear with Crystal Customized bracelet combo.png','images/Triple Crystal Bracelets.png'], desc:'Clear crystal beads meet sparkling accents in this enchanting combo. The transparency of the crystals catches light beautifully, making it a stunning everyday piece. Fully customisable — pick your crystal colour and charm.' },
+      'chains':        { name:'Customized Chains',              price:'₹99',  orig:'₹180', disc:'45% OFF', reviews:'4.7 · 17 reviews', imgs:['images/Customized Chains.png'], desc:'Personalised gold & silver chain bracelets with charms of your choice. Lightweight, elegant and adjustable. A great gift for minimalists who love delicate jewellery. Tell us your preferred metal tone and charm.' },
+      'evileye':       { name:'Evil Eye Bracelet',              price:'₹89',  orig:'₹150', disc:'41% OFF', reviews:'4.9 · 64 reviews', imgs:['images/Evil Eye Bracelet.png','images/Bracelet .png'], desc:'Protect your energy in style with our iconic evil eye bracelet. Made with vibrant hand-picked beads and a bold evil eye charm. Believed to ward off negativity, this bracelet is both meaningful and beautiful.' },
+      'triple':        { name:'Triple Crystal Bracelets',       price:'₹149', orig:'₹280', disc:'47% OFF', reviews:'5.0 · 29 reviews', imgs:['images/Triple Crystal Bracelets.png','images/Clear with Crystal Customized bracelet combo.png'], desc:'A luxurious set of three crystal bracelets — rose quartz for love, clear quartz for clarity and amethyst for calm. Pure elegance in a gift-ready set. Stackable and fully customisable in colour and charm.' }
+    };
+
+    const params = new URLSearchParams(location.search);
+    const id = params.get('id') || 'bracelet';
+    const p  = products[id] || products['bracelet'];
+
+    document.title = p.name + ' – Cosmicookies';
+    document.getElementById('pd-name').textContent        = p.name;
+    document.getElementById('pd-bread-name').textContent  = p.name;
+    document.getElementById('pd-price').textContent       = p.price;
+    document.getElementById('pd-orig').textContent        = p.orig;
+    document.getElementById('pd-disc').textContent        = p.disc;
+    document.getElementById('pd-reviews').textContent     = p.reviews;
+    document.getElementById('pd-desc').textContent        = p.desc;
+
+    // Main image
+    const mainImg = document.getElementById('pd-main-img');
+    mainImg.src = p.imgs[0]; mainImg.alt = p.name;
+
+    // Thumbs
+    const thumbsWrap = document.getElementById('pd-thumbs');
+    p.imgs.forEach((src, i) => {
+      const d = document.createElement('div');
+      d.className = 'pd-thumb' + (i === 0 ? ' active' : '');
+      d.innerHTML = `<img src="${src}" alt="${p.name}"/>`;
+      d.addEventListener('click', () => {
+        mainImg.src = src;
+        document.querySelectorAll('.pd-thumb').forEach(t => t.classList.remove('active'));
+        d.classList.add('active');
+      });
+      thumbsWrap.appendChild(d);
+    });
+
+    // Sizes
+    const sizesWrap = document.getElementById('pd-sizes');
+    [14,15,16,17,18,19,20,21].forEach(s => {
+      const b = document.createElement('button');
+      b.className = 'pd-size-btn'; b.textContent = s;
+      b.addEventListener('click', () => {
+        document.querySelectorAll('.pd-size-btn').forEach(x => x.classList.remove('sel'));
+        b.classList.add('sel');
+      });
+      sizesWrap.appendChild(b);
+    });
+
+    // Color swatches
+    document.querySelectorAll('.color-swatch').forEach(sw => {
+      sw.addEventListener('click', () => {
+        document.querySelectorAll('.color-swatch').forEach(x => x.classList.remove('sel'));
+        sw.classList.add('sel');
+      });
+    });
+
+    // Charm buttons
+    document.querySelectorAll('.charm-btn').forEach(cb => {
+      cb.addEventListener('click', () => {
+        document.querySelectorAll('.charm-btn').forEach(x => x.classList.remove('sel'));
+        cb.classList.add('sel');
+      });
+    });
+
+    // Wishlist
+    const wishBtn = document.getElementById('pd-wish-btn');
+    let wished = false;
+    wishBtn.addEventListener('click', () => {
+      wished = !wished;
+      wishBtn.textContent = wished ? '♥' : '♡';
+      wishBtn.style.color = wished ? 'var(--rose)' : '';
+    });
+
+    // Add to cart
+    document.getElementById('pd-add-btn').addEventListener('click', () => {
+      const sizeBtn = document.querySelector('.pd-size-btn.sel');
+      if(!sizeBtn) {
+        alert('Please select a wrist size first!');
+        return;
+      }
+      const size = sizeBtn.textContent + ' cm';
+      const color = document.querySelector('.color-swatch.sel')?.dataset.color || 'Standard';
+
+      const item = {
+        id: id,
+        name: p.name,
+        price: p.price,
+        img: p.imgs[0],
+        size: size,
+        color: color
+      };
+      
+      // Call global cart function
+      window.addToCart(item);
+
+      const btn = document.getElementById('pd-add-btn');
+      btn.textContent = '✓ ADDED!';
+      btn.style.background = '#4caf50';
+      setTimeout(() => { btn.textContent = 'ADD TO CART'; btn.style.background = ''; }, 2000);
+    });
+
+    // Customise submit
+    document.getElementById('cust-submit').addEventListener('click', () => {
+      const color  = document.querySelector('.color-swatch.sel')?.dataset.color || '';
+      const charm  = document.querySelector('.charm-btn.sel')?.dataset.charm || '';
+      const note   = document.getElementById('cust-note').value;
+      const size   = document.querySelector('.pd-size-btn.sel')?.textContent || 'Not selected';
+      console.log('Custom order:', { product: p.name, color, charm, size, note });
+      document.getElementById('cust-success').classList.add('show');
+      document.getElementById('cust-submit').textContent = '✓ REQUEST SENT';
+      document.getElementById('cust-submit').style.background = '#4caf50';
+    });
+
+
+  </script>
+</body>
+</html>
