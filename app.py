@@ -8,7 +8,12 @@ import os
 
 app = Flask(__name__)
 app.secret_key = "cosmicookies_super_secret_key_123"
-DB_NAME = "users.db"
+
+# Vercel has a read-only filesystem, so we must save the DB in /tmp/
+if os.environ.get("VERCEL"):
+    DB_NAME = "/tmp/users.db"
+else:
+    DB_NAME = "users.db"
 
 # ==========================================
 # EMAIL CONFIGURATION (UPDATE THESE)
