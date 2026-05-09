@@ -8,6 +8,14 @@
   ],
   "routes": [
     {
+      "src": "/images/(.*)",
+      "dest": "/images/$1"
+    },
+    {
+      "src": "/(style\\.css|script\\.js)",
+      "dest": "/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "app.py"
     }
