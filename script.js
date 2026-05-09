@@ -163,6 +163,30 @@ function handleSubmit(e) {
 // ---------- Scroll-reveal animations ----------
 document.addEventListener('DOMContentLoaded', () => {
 
+  // Check login status and update navbar
+  fetch('/api/user')
+    .then(res => res.json())
+    .then(data => {
+      if (data.logged_in) {
+        const loginLinks = document.querySelectorAll('a[href="/login"]');
+        loginLinks.forEach(link => {
+          const emailInitials = data.email.substring(0, 2).toUpperCase();
+          const avatarUrl = `https://ui-avatars.com/api/?name=${emailInitials}&background=random&color=fff&rounded=true&size=34`;
+          
+          const profileDiv = document.createElement('div');
+          profileDiv.className = 'nav-profile';
+          profileDiv.innerHTML = `
+            <img src="${avatarUrl}" alt="Profile" class="profile-pic" />
+            <div class="profile-dropdown">
+              <span class="profile-email">${data.email}</span>
+              <a href="/logout" class="logout-btn">Logout</a>
+            </div>
+          `;
+          link.parentNode.replaceChild(profileDiv, link);
+        });
+      }
+    })
+    .catch(err => console.error("Error fetching user data", err));
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {

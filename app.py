@@ -1,12 +1,15 @@
 import sqlite3
 import smtplib
 from email.message import EmailMessage
-from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory
+from flask import Flask, render_template, request, redirect, url_for, session, flash, send_from_directory, jsonify
 from werkzeug.security import generate_password_hash, check_password_hash
 from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignature
+from werkzeug.middleware.proxy_fix import ProxyFix
 import os
 
 app = Flask(__name__)
+# Tell Flask it is behind a proxy (like Vercel) to generate correct HTTPS URLs
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1, x_prefix=1)
 app.secret_key = "cosmicookies_super_secret_key_123"
 
 # Vercel has a read-only filesystem, so we must save the DB in /tmp/
@@ -174,6 +177,12 @@ def logout():
     session.clear()
     flash('Logged out successfully.', 'success')
     return redirect(url_for('home'))
+
+@app.route('/api/user')
+def get_user():
+    if 'user_id' in session:
+        return jsonify({'logged_in': True, 'email': session['email']})
+    return jsonify({'logged_in': False})
 
 if __name__ == '__main__':
     app.run(debug=True, port=8000, host='127.0.0.1')
