@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login – Cosmicookies</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/style.css" />
+  <style>
+    body {
+      background: url('/images/Bracelet%20.png') no-repeat center center fixed;
+      background-size: cover;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      position: relative;
+    }
+    .auth-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 1;
+    }
+    .auth-container {
+      position: relative;
+      z-index: 2;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      width: 100%;
+      max-width: 450px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      text-align: center;
+      color: #fff;
+    }
+    .auth-logo {
+      font-family: 'Great Vibes', cursive;
+      font-size: 3rem;
+      color: #e0b195;
+      margin-bottom: 0.5rem;
+      display: block;
+      text-decoration: none;
+    }
+    .auth-title {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 500;
+      letter-spacing: 2px;
+      margin-bottom: 2rem;
+      font-size: 1.2rem;
+    }
+    .form-group {
+      margin-bottom: 1.5rem;
+      text-align: left;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+      color: #f4e9de;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      background: rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      color: #fff;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+      box-sizing: border-box;
+    }
+    .form-group input::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+    .form-group input:focus {
+      background: rgba(255, 255, 255, 0.25);
+      border-color: #e0b195;
+    }
+    .auth-btn {
+      width: 100%;
+      padding: 12px;
+      background: #e0b195;
+      color: #1c1c1c;
+      border: none;
+      border-radius: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 600;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      cursor: pointer;
+      transition: transform 0.3s ease, background 0.3s ease;
+      margin-top: 1rem;
+    }
+    .auth-btn:hover {
+      background: #cba084;
+      transform: translateY(-2px);
+    }
+    .auth-links {
+      margin-top: 1.5rem;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+    }
+    .auth-links a {
+      color: #e0b195;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    .auth-links a:hover {
+      color: #fff;
+    }
+    .flash-messages {
+      margin-bottom: 1.5rem;
+    }
+    .flash-message {
+      padding: 10px;
+      border-radius: 8px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 0.9rem;
+      margin-bottom: 0.5rem;
+    }
+    .flash-success { background: rgba(40, 167, 69, 0.2); border: 1px solid #28a745; color: #fff; }
+    .flash-danger { background: rgba(220, 53, 69, 0.2); border: 1px solid #dc3545; color: #fff; }
+    .flash-info { background: rgba(23, 162, 184, 0.2); border: 1px solid #17a2b8; color: #fff; }
+  </style>
+</head>
+<body>
+  <div class="auth-overlay"></div>
+  <div class="auth-container">
+    <a href="/" class="auth-logo">cosmicookies</a>
+    <h2 class="auth-title">WELCOME BACK</h2>
+    
+    <div class="flash-messages">
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="flash-message flash-{{ category }}">{{ message }}</div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+    </div>
+
+    <form method="POST" action="/login">
+      <div class="form-group">
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required placeholder="Enter your email">
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required placeholder="Enter your password">
+      </div>
+      <button type="submit" class="auth-btn">LOGIN</button>
+    </form>
+
+    <div class="auth-links">
+      <p>Don't have an account? <a href="/register">Sign up here</a></p>
+    </div>
+  </div>
+</body>
+</html>
